@@ -1,0 +1,19 @@
+{
+    "name": "anvii/htmlelement",
+    "description": "A library to create HTML code in PHP",
+    "type": "library",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Andrey Solovyev",
+            "email": "andrewsl@yandex.ru"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"anvii\\HtmlElement\\": "src/"}
+    },
+    "require": {
+        "php": ">=7.2.0"
+    }
+}
