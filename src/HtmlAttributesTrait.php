@@ -62,7 +62,8 @@ trait HtmlAttributesTrait
     private function renderAttribute($name, $value) : string
     {
         $name = (string)$name;
-        $value = (string)$value;
+        if ($name[0] != '_')
+            $value = (string)$value;
         $out = '';
 
         if (\is_numeric($name))

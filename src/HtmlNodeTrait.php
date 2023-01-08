@@ -31,14 +31,14 @@ trait HtmlNodeTrait
      *
      * @var array
      */
-    public $items = [];
+    protected $items = [];
 
     /**
      * A character or a string to separate items
      *
      * @var string
      */
-    public $separator = '';
+    protected $separator = '';
 
 
     /**
@@ -159,6 +159,28 @@ trait HtmlNodeTrait
     public function count() : int
     {
         return count($this->items);
+    }
+
+    /**
+     * Get separator of children items
+     * 
+     * @return string
+     */
+    public function getSeparator()
+    {
+        return $this->separator;
+    }
+
+    /**
+     * Set separator of children items
+     * 
+     * @param string $separator
+     * @return $this
+     */
+    public function setSeparator($separator)
+    {
+        $this->separator = $separator;
+        return $this;
     }
 
     /**
