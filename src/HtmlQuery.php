@@ -343,7 +343,7 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
     /**
      * Implement method offsetGet()
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->elements[$offset];
     }
@@ -416,7 +416,9 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
 
     /**
      * Implement method current()
+     * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function current()
     {
         return $this->elements[$this->position];
@@ -424,7 +426,9 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
 
     /**
      * Implement method key()
+     * @return mixed
      */
+    #[ReturnTypeWillChange]
     public function key()
     {
         return $this->position;

@@ -200,7 +200,7 @@ class HtmlElement
         if ($this->hasAttribute('_if')) {
             $_if = $this->getAttribute('_if');
             if (is_callable($_if) && !is_string($_if))
-                $_if = call_user_func($_if);
+                $_if = call_user_func($_if, $this);
             if (!$_if)
                 return '';
         }
@@ -285,13 +285,17 @@ class HtmlElement
     public function createId()
     {
         static $seq=0;
-        $seq++;
-        $base = strtolower(get_called_class());
-        $p = strrpos($base, '\\');
-        if ($p !== false)
-            $base = substr($base, $p+1);
-        $id = sprintf('%s-%d',$base, $seq);
-        $this->setAttribute('id', $id);
+        $id = $this->getAttribute('id');
+        if (!$id)
+        {
+            $seq++;
+            $base = strtolower(get_called_class());
+            $p = strrpos($base, '\\');
+            if ($p !== false)
+                $base = substr($base, $p+1);
+            $id = sprintf('%s-%d',$base, $seq);
+            $this->setAttribute('id', $id);
+        }
         return $id;
     }
 
