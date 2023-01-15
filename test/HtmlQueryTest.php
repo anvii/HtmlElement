@@ -45,6 +45,14 @@ class HtmlQueryTest extends \PHPUnit\Framework\TestCase
         return $select;
     }
 
+    public static function sample3()
+    {
+        $form = HtmlElement::form(['name'=>'form1'], [
+            HtmlElement::input(['type'=>'text', 'name'=>'title']),
+        ]);
+        return $form;
+    }
+
     public function testParseSelector()
     {
         $selector = Selector::parseSelector('#identifier');
@@ -159,21 +167,28 @@ class HtmlQueryTest extends \PHPUnit\Framework\TestCase
     {
         $page = self::sample1();
         $all = $page->query('*');
-        $this->assertGreaterThan(1, $all->count());
+        $this->assertGreaterThan(1, $all->count(), 'Wildcard');
     }
 
     public function testEmptyValue()
     {
         $select = self::sample2();
         $result = $select->query('[value=""]');
-        $this->assertCount(1, $result);
+        $this->assertCount(1, $result, 'Empty value');
     }
 
     public function testNumericValue()
     {
         $select = self::sample2();
-        $result = $select->query('[value="123"]');
+        $result = $select->query('[value="123"]', 'Numeric value');
         $this->assertCount(1, $result);
+    }
+
+    public function testNestedSearch()
+    {
+        $form = self::sample3();
+        $result = $form->query('[name]');
+        $this->assertCount(2, $result, 'Query nested elements along with found root element');
     }
 
 };

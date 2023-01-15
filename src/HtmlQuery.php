@@ -253,8 +253,16 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
             {
                 if ($next instanceof HtmlElement)
                 {
+                    // Check elements with shifted query
                     $children = static::new($next)->query($q);
                     $result->addElements($children->elements);
+
+                    // Check elements with full query
+                    if (count($q) !== count($query))
+                    {
+                        $children = static::new($next)->query($query);
+                        $result->addElements($children->elements);
+                    }
                 }
             }
         } // foreach($this->elements as $e)
