@@ -182,13 +182,13 @@ trait HtmlStyleTrait
             $style = $this->parseStyle($name);
         }
         else {
-            throw new RuntimeException('Invalid arguments for HtmlStyleTrait::setStyle');
+            throw new \RuntimeException('Invalid arguments for HtmlStyleTrait::setStyle');
         }
 
         $styleArray = $this->attributes['style'] ?? $this->createStyleArray();
         [$name, $value] = $style;
         $styleArray[$name] = $value;
-        $this->attribute['style'] = $styleArray;
+        $this->attributes['style'] = $styleArray;
 
         return $this;
     }

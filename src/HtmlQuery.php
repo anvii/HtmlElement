@@ -210,6 +210,16 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
     }
 
     /**
+     * Get an array of found items
+     * 
+     * @return array
+     */
+    public function getElements() : array
+    {
+        return $this->elements;
+    }
+
+    /**
      * Find elements by given criteria (query)
      *
      * @param string|array|callable $query

@@ -109,7 +109,7 @@ class HtmlElement
         include($filename);
         $out = ob_get_contents();
         ob_end_clean();
-        return new static('', ['_raw'], $out);
+        return new self('', ['_raw'], $out);
     }
 
     /**
@@ -137,7 +137,7 @@ class HtmlElement
     {
         $attributes = isset($params[0]) ? $params[0] : [];
         $content = isset($params[1]) ? $params[1] : NULL;
-        return new static($tag, $attributes, $content);
+        return new self($tag, $attributes, $content);
     }
 
     /**
