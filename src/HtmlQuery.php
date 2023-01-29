@@ -421,7 +421,7 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
         }
 
         // Return empty HtmlQuery if no result
-        return empty($response) ? new HtmlQuery() : $response;
+        return $response === NULL ? new HtmlQuery() : $response;
     }
 
     /**
