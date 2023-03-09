@@ -61,6 +61,12 @@ trait HtmlAttributesTrait
      */
     private function renderAttribute($name, $value) : string
     {
+        if (is_callable($name) && !is_string($name))
+            $name = call_user_func($name, $this);
+
+        if (is_callable($value) && !is_string($value))
+            $value = call_user_func($value, $this);
+
         $name = (string)$name;
         if ($name[0] != '_')
             $value = (string)$value;

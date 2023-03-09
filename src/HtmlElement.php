@@ -68,7 +68,8 @@ class HtmlElement
     /**
      * Attributes without values
      */
-    const VOID_ATTRIBUTES = ['readonly', 'disabled', 'checked', 'selected', 'required', 'autofocus', 'novalidate', 'formnovalidate', 'async'];
+    const VOID_ATTRIBUTES = ['readonly', 'disabled', 'checked', 'selected', 'required', 'autofocus',
+        'novalidate', 'formnovalidate', 'async', 'hidden'];
 
 
     /**
@@ -179,6 +180,10 @@ class HtmlElement
                 return false;
             else if (is_string($item) && $item != '')
                 return false;
+            else if (is_callable($item)) {
+                $result = call_user_func($item, $this);
+                return $result === NULL || $result === '';
+            }
         }
         return true;
     }

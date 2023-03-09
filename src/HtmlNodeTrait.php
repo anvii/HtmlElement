@@ -221,9 +221,9 @@ trait HtmlNodeTrait
             $glue = $this->separator;
 
             if (!is_string($item) && is_callable($item))
-                $item = call_user_func($item);
+                $item = call_user_func($item, $this);
             if (is_string($item) && !$this->getAttribute('_raw'))
-                $out .= htmlspecialchars($item);
+                $out .= \htmlspecialchars($item, ENT_NOQUOTES);
             else
                 $out .= $item;
         }

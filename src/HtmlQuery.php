@@ -78,21 +78,139 @@ class Selector
         {
             $instance->any = true;
         }
-        else if (preg_match('/^(?P<tag>[\w\-_]+)?(\.(?P<class>[\w\-_]+))?(#(?P<id>[\w\-_]+))?(\[(?P<attr>[\w\-_]+)(=[\\\'"]?(?P<value>.*?)[\\\'"]?)?\])?$/', $selector, $matches, PREG_UNMATCHED_AS_NULL))
+        else
         {
-            if (isset($matches['tag']))
-                $instance->tag = $matches['tag'];
-            if (isset($matches['class']))
-                $instance->class = $matches['class'];
-            if (isset($matches['id']))
-                $instance->id = $matches['id'];
-            if (isset($matches['attr']))
-                $instance->attr = $matches['attr'];
-            if (isset($matches['value']))
-                $instance->value = $matches['value'];
+            $parser = self::class.'::parseTag';
+            $length = strlen($selector);
+            for($i=0; $i<$length;)
+            {
+                $parser($selector, $i, $instance);
+                if ($i >= $length)
+                    break;
+
+                switch($selector[$i])
+                {
+                    case '#':
+                        $parser = self::class.'::parseId';
+                        $i++;
+                        break;
+                    case '.':
+                        $parser = self::class.'::parseClass';
+                        $i++;
+                        break;
+                    case '[':
+                        $parser = self::class.'::parseAttribute';
+                        $i++;
+                        break;
+                    default:
+                        return NULL;
+                }
+            }
         }
 
         return $instance;
+    }
+
+    private static function isAlNum($ch)
+    {
+        return (($ch >= 'a' && $ch <= 'z') || ($ch >= 'a' && $ch <= 'z') || ($ch >= '0' && $ch <= '9')
+            || in_array($ch, ['_', '-', ':']));
+    }
+
+    private static function parseWord($selector, &$i)
+    {
+        $word = '';
+        $length = strlen($selector);
+        while($i<$length)
+        {
+            $ch = $selector[$i];
+            if (static::isAlNum($ch))
+            {
+                $word .= $ch;
+                $i++;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return $word !== '' ? $word : NULL;
+    }
+
+    private static function parseTag($selector, &$i, &$instance)
+    {
+        $tag = static::parseWord($selector, $i);
+        if ($tag !== NULL)
+            $instance->tag = $tag;
+    }
+
+    private static function parseId($selector, &$i, &$instance)
+    {
+        $id = static::parseWord($selector, $i);
+        if ($id !== NULL)
+            $instance->id = $id;
+    }
+
+    private static function parseClass($selector, &$i, &$instance)
+    {
+        $class = static::parseWord($selector, $i);
+        if ($class !== NULL)
+            $instance->class = $class;
+    }
+
+    private static function parseAttribute($selector, &$i, &$instance)
+    {
+        $attr = static::parseWord($selector, $i);
+        if ($i <= strlen($selector)-1)
+        {
+            $value = NULL;
+            if ($attr !== NULL)
+            {
+                if ($selector[$i] == '=') {
+                    $i++;
+                    $value = static::parseValue($selector, $i);
+                }
+            }
+
+            if ($i <= strlen($selector)-1 && $selector[$i] == ']')
+            {
+                $i++;
+                if ($attr !== NULL) {
+                    $instance->attr = $attr;
+                    if ($value !== NULL)
+                        $instance->value = $value;
+                }
+            }
+        }
+    }
+
+    private static function parseValue($selector, &$i)
+    {
+        $quote = $selector[$i];
+        if ($quote != '"' && $quote != '\'')
+            $quote = NULL;
+        if ($quote)
+            $i++;
+
+        $value = '';
+        while($i<strlen($selector))
+        {
+            if ($selector[$i] == '\\')
+                $i++;
+            $ch = $selector[$i];
+            if ($quote && $ch == $quote) {
+                $i++;
+                break;
+            }
+            if (!$quote && $ch == ']') {
+                break;
+            }
+            $value .= $ch;
+            $i++;
+        }
+
+        return $value;
     }
 
     /**
@@ -421,7 +539,7 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
         }
 
         // Return empty HtmlQuery if no result
-        return empty($response) ? new HtmlQuery() : $response;
+        return $response === NULL ? new HtmlQuery() : $response;
     }
 
     /**

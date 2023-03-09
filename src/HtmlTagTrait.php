@@ -82,11 +82,10 @@ trait HtmlTagTrait
     {
         if ($selfClose === NULL)
             $selfClose = $this->isSingleTag();
-        $close = $selfClose ? ' /' : '';
         $attributes = $this->renderAttributes();
         if ($attributes)
             $attributes = ' ' . $attributes;
-        return '<' . $this->getTag() . $attributes . $close . '>';
+        return '<' . $this->getTag() . $attributes . '>';
     }
 
     /**

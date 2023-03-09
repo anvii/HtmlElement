@@ -21,7 +21,7 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
         $this->assertSame((string)$n1, (string)$n2);
 
         $i1 = HtmlElement::img();
-        $this->assertSame('<img />', (string)$i1);
+        $this->assertSame('<img>', (string)$i1);
     }
 
     public function testAttributes()

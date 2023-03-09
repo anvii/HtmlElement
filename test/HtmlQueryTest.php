@@ -191,4 +191,21 @@ class HtmlQueryTest extends \PHPUnit\Framework\TestCase
         $this->assertCount(2, $result, 'Query nested elements along with found root element');
     }
 
+    public function testAddClass()
+    {
+        $form = HtmlElement::form([], [
+            HtmlElement::input(['type'=>'text', 'name'=>'name', 'id'=>'name', 'required', 'class'=>'htmlform-control',
+            '_label' => 'Your name', '_description' => "Don't hesitate to type your real name"])
+        ]);
+        $form->query('input[type="checkbox"].htmlform-control')->addClass('form-check-input');
+        $this->assertNotContains('form-check-input', $form->render());
+    }
+
+    public function testEmptyAttribute()
+    {
+        $cb = HtmlElement::input(['type'=>'radio']);
+        $result = $cb->query('input[]');
+        $this->assertEquals(1, $result->count());
+    }
+
 };
