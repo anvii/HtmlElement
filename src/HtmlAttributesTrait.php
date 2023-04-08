@@ -38,6 +38,20 @@ trait HtmlAttributesTrait
     }
 
     /**
+     * Attribute is hidden
+     * Hidden attribute's name starts with underscore '_'
+     *
+     * @param mixed $attr
+     *   Attribute name: can be string, int...
+     * @return bool
+     *   True if $attr is a void attribute
+     */
+    protected function isHiddenAttribute($attr): bool
+    {
+        return is_string($attr) && strlen($attr) > 0 && $attr[0] == '_';
+    }
+
+    /**
      * Render void attribute
      *
      * @param string $name
@@ -46,7 +60,7 @@ trait HtmlAttributesTrait
     private function renderVoidAttribute($name) : string
     {
         $out = '';
-        if (strlen($name) > 0 && $name[0] != '_') {
+        if (!$this->isHiddenAttribute($name)) {
             $out .= $name;
         }
         return $out;
@@ -68,16 +82,17 @@ trait HtmlAttributesTrait
             $value = call_user_func($value, $this);
 
         $name = (string)$name;
-        if ($name[0] != '_')
-            $value = (string)$value;
+        $displayValue = $value;
+        if (!$this->isHiddenAttribute($name))
+            $displayValue = (string)$displayValue;
         $out = '';
 
         if (\is_numeric($name))
         {
             // In case ['readonly'] the $name in numeric
-            $out .= $this->renderVoidAttribute($value);
+            $out .= $this->renderVoidAttribute($displayValue);
         }
-        else if ($this->isVoidAttribute($name))
+        else if ($this->isVoidAttribute($name) || $value === true)
         {
             // Case ['readonly' => '1']
             if ($value) {
@@ -86,13 +101,13 @@ trait HtmlAttributesTrait
         }
         else
         {
-            if ($name[0] != '_')
+            if (!$this->isHiddenAttribute($name))
             {
                 // Value can be presented by array, like class=["first", "odd", "content"]
                 if (\is_array($value)) {
-                    $value = \implode(' ', $value);
+                    $displayValue = \implode(' ', $value);
                 }
-                $out .= \sprintf('%s="%s"', $name, \htmlspecialchars($value));
+                $out .= \sprintf('%s="%s"', $name, \htmlspecialchars($displayValue));
             }
         }
         return $out;
@@ -163,7 +178,7 @@ trait HtmlAttributesTrait
      *   attribute value
      * @return $this
      */
-    public function setAttribute($name, $value=NULL)
+    public function setAttribute($name, $value=true)
     {
         if ($name === 'class') {
             $this->setClasses($value);
@@ -174,11 +189,17 @@ trait HtmlAttributesTrait
             return $this;
         }
 
-        if ($value !== NULL) {
+        // Hidden attributes are added as is
+        if ($this->isHiddenAttribute($name)) {
+            $this->attributes[$name] = $value;
+        }
+        // Not logical (void) attributes
+        else if ($value !== NULL && $value !== false) {
             $this->attributes[$name] = $value;
         }
         else {
-            $this->attributes[] = $name;
+            // Attribute with NULL value is omited
+            //$this->attributes[] = $name;
         }
 
         return $this;

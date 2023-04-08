@@ -214,4 +214,16 @@ class HtmlElementTest extends \PHPUnit\Framework\TestCase
         });
         $this->assertSame('<div>CBA</div>', (string)$div);
     }
+
+    public function testNullAttribute()
+    {
+        $input = HtmlElement::input(['type'=>'text', 'value'=>NULL]);
+        $this->assertSame('<input type="text">', $input->render());
+    }
+
+    public function testBooleanAttribute()
+    {
+        $button = HtmlElement::input(['type' => 'button', 'pressed' => true]);
+        $this->assertSame('<input type="button" pressed>', $button->render());
+    }
 };
