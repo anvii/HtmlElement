@@ -200,6 +200,7 @@ trait HtmlAttributesTrait
         else {
             // Attribute with NULL value is omited
             //$this->attributes[] = $name;
+            $this->removeAttribute($name);
         }
 
         return $this;
