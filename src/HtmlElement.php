@@ -31,6 +31,7 @@ namespace anvii\HtmlElement;
  * @method static HtmlElement h6(array $attributes=[], $content=NULL)
  * @method static HtmlElement header(array $attributes=[], $content=NULL)
  * @method static HtmlElement footer(array $attributes=[], $content=NULL)
+ * @method static HtmlElement main(array $attributes=[], $content=NULL)
  * @method static HtmlElement form(array $attributes=[], $content=NULL)
  * @method static HtmlElement button(array $attributes=[], $content=NULL)
  * @method static HtmlElement input(array $attributes=[], $content=NULL)
@@ -63,7 +64,7 @@ class HtmlElement
     /**
      * Tags to be closed immediately
      */
-    const SINGLE_TAGS = ['hr', 'img', 'meta', 'link', 'base', 'br', 'input', 'itemscope'];
+    const SINGLE_TAGS = ['hr', 'img', 'meta', 'base', 'br', 'input', 'itemscope'];
 
     /**
      * Attributes without values

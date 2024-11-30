@@ -554,7 +554,7 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
      * Implement method current()
      * @return mixed
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return $this->elements[$this->position];
@@ -564,7 +564,7 @@ class HtmlQuery implements \Countable, \ArrayAccess, \Iterator
      * Implement method key()
      * @return mixed
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->position;
